@@ -36,6 +36,19 @@ typedef struct vec3
     }
 } vec3;
 
-
+vec2 operator+(const vec2& l, const vec2& r);
+vec3 operator+(const vec3& l, const vec3& r);
+vec2 operator-(const vec2& l, const vec2& r);
+vec3 operator-(const vec3& l, const vec3& r);
+vec2 operator*(const vec2& l, const vec2& r);
+vec3 operator*(const vec3& l, const vec3& r);
+vec2 operator*(const vec2& l, float r);
+vec3 operator*(const vec3& l, float r);
+bool operator==(const vec2& l, const vec2& r);
+bool operator==(const vec3& l, const vec3& r);
+bool operator!=(const vec2& l, const vec2& r);
+bool operator!=(const vec3& l, const vec3& r);
+float Dot(const vec2& l, const vec2& r);
+float Dot(const vec2& l, const vec3& r);
 
 #endif
