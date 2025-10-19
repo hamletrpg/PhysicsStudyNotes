@@ -111,3 +111,189 @@ mat4 operator*(const mat4& matA, const mat4& matB)
     return res;
 }
 // ################################# To re-check
+
+// Determinant normally used to check if matrix has an inverse
+// if value returns non zero then matrix has an inverse
+float Determinant(const mat2& matrix)
+{
+    return matrix._11 * matrix._22 - matrix._12 * matrix._21;
+}
+
+mat2 Cut(const mat3& mat, int row, int col)
+{
+    mat2 result;
+    int index = 0;
+    for (int i = 0; i < 3; ++i)
+    {
+        for (int j = 0; j < 3; ++j)
+        {
+            if (i == row || j == col)
+            {
+                continue;
+            }
+            int target = index++;
+            int source = 3 * i + j;
+            result.asArray[target] = mat.asArray[source];
+        }
+    }
+    return result;
+}
+
+mat3 Minor(const mat3& mat)
+{
+    mat3 result;
+    for (int i = 0; i< 3; ++i)
+    {
+        for (int j = 0; j < 3; ++j)
+        {
+            result[i][j] = Determinant(Cut(mat, i, j));
+        }
+    }
+
+    return result;
+}
+
+mat2 Minor(const mat2& mat)
+{
+    return mat2(
+        mat._22, mat._21, mat._12, mat._11
+    );
+}
+
+void Cofactor(float* out, const float* minor, int rows, int cols)
+{
+    for (int i = 0; i < rows; ++i)
+    {
+        for (int j = 0; j < cols; ++j)
+        {
+            int t = cols * j + i; // Target Index
+            int s = cols * j + i; // Source index
+            float sign = powf(-1.0f, i + j); 
+            out[t] = minor[s] * sign;
+        }
+    }
+}
+
+mat2 Cofactor(const mat2& mat)
+{
+    mat2 result;
+    Cofactor(result.asArray, Minor(mat).asArray, 2, 2);
+    return result;
+}
+
+mat3 Cofactor(const mat3& mat)
+{
+    mat3 result;
+    Cofactor(result.asArray, Minor(mat).asArray, 3, 3);
+    return result;
+}
+
+float Determinant(const mat3& mat)
+{
+    float result = 0.0f;
+    mat3 cofactor = Cofactor(mat);
+    for (int j = 0; j < 3; ++j)
+    {
+        int index = 3 * 0 + j;
+        result += mat.asArray[index] * cofactor[0][j];
+    }
+    return result;
+}
+
+mat3 Cut(const mat4& mat, int row, int col)
+{
+    mat3 result;
+    int index = 0;
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 4; ++j)
+        {
+            if (i == row || j == col)
+            {
+                continue;
+            }
+            int target = index++;
+            int source = 4 * i + j;
+            result.asArray[target] = mat.asArray[source];
+        }
+    }
+    return result;
+}
+
+mat4 Minor(const mat4& mat)
+{
+    mat4 result;
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            result[i][j] = Determinant(Cut(mat, i, j));
+        }
+    }
+    return result;
+}
+
+mat4 Cofactor(const mat4& mat)
+{
+    mat4 result;
+    Cofactor(result.asArray, Minor(mat).asArray, 4, 4);
+    return result;
+}
+
+float Determinant(const mat4& mat)
+{
+    float result = 0.0f;
+
+    mat4 cofactor = Cofactor(mat);
+    for (int j = 0; j < 4; ++j)
+    {
+        result += mat.asArray[4 * 0 + j] * cofactor[0][j];
+    }
+    return result;
+}
+
+mat2 Adjugate(const mat2& mat)
+{
+    return Transpose(Cofactor(mat));
+}
+
+mat3 Adjugate(const mat3& mat)
+{
+    return Transpose(Cofactor(mat));
+}
+
+mat4 Adjugate(const mat4& mat)
+{
+    return Transpose(Cofactor(mat));
+}
+
+mat2 Inverse(const mat2& mat)
+{
+    float det = Determinant(mat);
+    if (CMP(det, 0.0f))
+    {
+        return mat2();
+    }
+    return Adjugate(mat) * (1.0f / det);
+}
+
+mat3 Inverse(const mat3& mat)
+{
+    float det = Determinant(mat);
+    if (CMP(det, 0.0f))
+    {
+        return mat3();       
+    }
+    return Adjugate(mat) * (1.0f / det);
+}
+
+mat4 Inverse(const mat4& mat)
+{
+    float det = Determinant(mat);
+    if (CMP(det, 0.0f))
+    {
+        return mat4();
+    }
+    return Adjugate(mat) * (1.0f / det);
+}
+
