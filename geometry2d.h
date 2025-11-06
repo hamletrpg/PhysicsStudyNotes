@@ -3,6 +3,12 @@
 
 #include "vectors.h"
 
+#define PointLine(point, line) PointOnLine(point, line)
+#define LinePoint(line, point) PointOnLine(point, line)
+#define CircleLine(circle, line) LineCircle(line, circle)
+#define RectangleLine(rectangle, line) LineRectangle(line, rectangle);
+#define OrientedRectangleLine(rectangle, line) LineOrientedRectangle(line, rectangle);
+
 typedef vec2 Point2D;
 
 typedef struct Line2D
@@ -33,6 +39,18 @@ typedef struct Rectangle2D
     inline Rectangle2D(const Point2D& o, const vec2& s) : origin(o), size(s) { }
 } Rectangle2D;
 
+typedef struct OrientedRectangle
+{
+    Point2D position;
+    vec2 halfExtents;
+    float rotation;
+
+    inline OrientedRectangle() : halfExtents(1.0f, 1.0f), rotation(0.0f) { }
+    inline OrientedRectangle(const Point2D& p, const vec2& e) : position(p), halfExtents(e), rotation(0.0f) {}
+
+    inline OrientedRectangle(const Point2D& pos, const vec2& ext, float rot) : position(pos), halfExtents(ext), rotation(rot) {}
+} OrientedRectangle;
+
 Rectangle2D FromMinMax(const vec2& min, const vec2& max)
 {
     return Rectangle2D(min, max - min);
@@ -42,5 +60,12 @@ float Length(const Line2D& line);
 float LengthSq(const Line2D& line);
 vec2 GetMin(const Rectangle2D& rect);
 vec2 GetMax(const Rectangle2D& rect);
+bool PointOnLine(const Point2D& point, const Line2D& line);
+bool PointInCircle(const Point2D& point, const Circle& c);
+bool PointInRectangle(const Point2D& point, const Rectangle2D& rectangle);
+bool PointInOrientedRectangle(const Point2D& point, const OrientedRectangle& rectangle);
+bool LineCircle(const Line2D& line, const Circle& circle);
+bool LineRectangle(const Line2D& l, const Rectangle2D& r);
+bool LineOrientedRectangle(const Line2D& line, const OrientedRectangle& rectangle);
 
 #endif
