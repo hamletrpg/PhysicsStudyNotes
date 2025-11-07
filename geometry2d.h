@@ -8,6 +8,9 @@
 #define CircleLine(circle, line) LineCircle(line, circle)
 #define RectangleLine(rectangle, line) LineRectangle(line, rectangle);
 #define OrientedRectangleLine(rectangle, line) LineOrientedRectangle(line, rectangle);
+#define RectangleCircle(rectangle, circle) CircleRectangle(circle, rectangle)
+#define OrientedRectangleCircle(rectangle, circle) CircleOrientedRectangle(circle, rectangle)
+#define OrientedRectangleRectangle(oriented, regular) \ RectangleOrientedRectangle(regular, oriented)
 
 typedef vec2 Point2D;
 
@@ -51,6 +54,12 @@ typedef struct OrientedRectangle
     inline OrientedRectangle(const Point2D& pos, const vec2& ext, float rot) : position(pos), halfExtents(ext), rotation(rot) {}
 } OrientedRectangle;
 
+typedef struct Interval2D 
+{
+    float min;
+    float max;
+} Interval2D;
+
 Rectangle2D FromMinMax(const vec2& min, const vec2& max)
 {
     return Rectangle2D(min, max - min);
@@ -67,5 +76,16 @@ bool PointInOrientedRectangle(const Point2D& point, const OrientedRectangle& rec
 bool LineCircle(const Line2D& line, const Circle& circle);
 bool LineRectangle(const Line2D& l, const Rectangle2D& r);
 bool LineOrientedRectangle(const Line2D& line, const OrientedRectangle& rectangle);
+bool CircleCircle(const Circle& c1, const Circle& c2);
+bool CircleRectangle(const Circle& circle, const Rectangle2D& rectangle);
+bool CircleOrientedRectangle(const Circle& circle, const OrientedRectangle& rect);
+bool RectangleRectangle(const Rectangle2D& rect1, const Rectangle2D rect2);
+Interval2D GetInterval(const Rectangle2D& rect, const vec2& axis);
+bool OverlapOnAxis(const Rectangle2D& rectl, const Rectangle2D& rect2, const vec2& axis);
+bool RectangleRectangleSAT(const Rectangle2D& rect1, const Rectangle2D& rect2);
+Interval2D GetInterval(const OrientedRectangle& rect, const vec2& axis);
+bool OverlapOnAxis(const Rectangle2D& rect1, const OrientedRectangle& rect2, const vec2& axis);
+bool RectangleOrientedRectangle(const Rectangle2D& rect1, const OrientedRectangle& rect2);
+bool OrientedRectangleOrientedRectangle(const OrientedRectangle& r1, const OrientedRectangle& r2);
 
 #endif
