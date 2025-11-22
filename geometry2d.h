@@ -60,6 +60,17 @@ typedef struct Interval2D
     float max;
 } Interval2D;
 
+typedef struct BoundingShape 
+{
+    int numCircles;
+    Circle* circles;
+    int numRectangles;
+    Rectangle2D* rectangles;
+
+    inline BoundingShape() : numCircles(0)m circles(0), numRectangles(0), rectangles(0) {}
+};
+
+
 Rectangle2D FromMinMax(const vec2& min, const vec2& max)
 {
     return Rectangle2D(min, max - min);
@@ -87,5 +98,8 @@ Interval2D GetInterval(const OrientedRectangle& rect, const vec2& axis);
 bool OverlapOnAxis(const Rectangle2D& rect1, const OrientedRectangle& rect2, const vec2& axis);
 bool RectangleOrientedRectangle(const Rectangle2D& rect1, const OrientedRectangle& rect2);
 bool OrientedRectangleOrientedRectangle(const OrientedRectangle& r1, const OrientedRectangle& r2);
+Circle ContainingCircle(Point2D* pArray, int arrayCount);
+Rectangle2D ContainingRectangle(Point2D* pointArray, int arrayCount);
+bool PointInShape(const BoundingShape& shape, const Point2D& point);
 
 #endif
